@@ -16,12 +16,12 @@
         android:orientation="horizontal">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/dislike_button"
+            android:id="@+id/next_button_leftanim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/star_button"
-            android:src="@drawable/ic_baseline_thumb_down_24"
+            android:src="@drawable/ic_baseline_skip_next_24"
             app:backgroundTint="@android:color/white"
             app:fabSize="auto"
             app:rippleColor="#22ED7563" />
@@ -41,13 +41,13 @@
             app:rippleColor="#225BC9FA" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/like_button"
+            android:id="@+id/next_button_rightanim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/star_button"
             android:contentDescription="TODO"
-            android:src="@drawable/ic_baseline_thumb_up_24"
+            android:src="@drawable/ic_baseline_skip_next_24"
             app:backgroundTint="@android:color/white"
             app:fabSize="auto"
             app:rippleColor="#226FE2B3" />
