@@ -3,6 +3,9 @@ package com.check.shaditestapp
 
 //import androidx.room.Entity
 //import androidx.room.TypeConverters
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -31,37 +34,41 @@ data class Info(
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-//@Entity
+@Entity
 data class ProfileShadi(
     @JsonProperty("cell")
     val cell: String? = null,
     @JsonProperty("dob")
- //   @TypeConverters(LanguageConvertor::class)
+    @TypeConverters(DobTypeConverter::class)
     val dob: Dob? = null,
+    @PrimaryKey
     @JsonProperty("email")
-    val email: String? = null,
+    val email: String,
     @JsonProperty("gender")
     val gender: String? = null,
     @JsonProperty("id")
+    @TypeConverters(IdTypeConverter::class)
     val id: Id? = null,
-    @JsonProperty("location")
- //   @TypeConverters(LanguageConvertor::class)
-    val location: Location? = null,
-    @JsonProperty("login")
-    val login: Login? = null,
+
+
     @JsonProperty("name")
-  //  @TypeConverters(LanguageConvertor::class)
+    @TypeConverters(NameTypeConverter::class)
     val name: Name? = null,
     @JsonProperty("nat")
     val nat: String? = null,
     @JsonProperty("phone")
     val phone: String? = null,
     @JsonProperty("picture")
-   // @TypeConverters(LanguageConvertor::class)
+    @TypeConverters(PictureTypeConverter::class)
     val picture: Picture? = null,
     @JsonProperty("registered")
-  //  @TypeConverters(LanguageConvertor::class)
-    val registered: Registered? = null
+   @TypeConverters(RegisteredTypeConverter::class)
+    val registered: Registered? = null,
+    @JsonProperty("isAccept")
+    var isAccept: Boolean = false,
+    @JsonProperty("isDecline")
+    var isDecline: Boolean = false
+
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

@@ -8,8 +8,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class CardStackAdapter (private var spots: List<ProfileShadi?>? = emptyList()
+class CardStackAdapter(
+    private var spots: List<ProfileShadi?>? = emptyList(),val mDatabase: ShadiDatabase
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,6 +29,39 @@ class CardStackAdapter (private var spots: List<ProfileShadi?>? = emptyList()
         holder.itemView.setOnClickListener { v ->
             Toast.makeText(v.context, profileShadi.name?.first, Toast.LENGTH_SHORT).show()
         }
+        val databaseShadi = mDatabase.getShadiData().getProfileShadiById(profileShadi.email!!)
+        if (databaseShadi.isAccept){
+            holder.acceptText.text = "Message"
+            holder.accept.visibility = View.VISIBLE
+
+            holder.declineText.visibility = View.GONE
+            holder.decline.visibility = View.GONE
+        } else if (databaseShadi.isDecline) {
+            holder.declineText.text = "Declined"
+            holder.decline.visibility = View.GONE
+
+            holder.acceptText.visibility = View.GONE
+            holder.accept.visibility = View.GONE
+        } else {
+            holder.declineText.text = "Decline"
+            holder.decline.visibility = View.VISIBLE
+
+            holder.acceptText.text = "Accept"
+            holder.accept.visibility = View.VISIBLE
+        }
+
+        holder.accept.setOnClickListener {
+            databaseShadi.isAccept = true
+            mDatabase.getShadiData().insertProfileShadi(databaseShadi)
+            notifyItemChanged(position, databaseShadi)
+        }
+
+        holder.decline.setOnClickListener {
+            databaseShadi.isDecline = true
+            mDatabase.getShadiData().insertProfileShadi(databaseShadi)
+            notifyItemChanged(position, databaseShadi)
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -45,6 +80,11 @@ class CardStackAdapter (private var spots: List<ProfileShadi?>? = emptyList()
         val name: TextView = view.findViewById(R.id.item_name)
         var city: TextView = view.findViewById(R.id.item_city)
         var image: ImageView = view.findViewById(R.id.item_image)
+        val accept : FloatingActionButton = view.findViewById(R.id.item_accept)
+        val decline : FloatingActionButton = view.findViewById(R.id.item_decline)
+        var declineText: TextView = view.findViewById(R.id.item_decline_text)
+        var acceptText: TextView = view.findViewById(R.id.item_accept_text)
+
     }
 
 }

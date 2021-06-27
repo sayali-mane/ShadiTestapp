@@ -9,6 +9,8 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.room.Room
+import com.check.shaditestapp.AppConstant.DB_NAME
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
@@ -28,6 +30,12 @@ class ProfileFragment : BaseFragment(), CardStackListener {
 
     private lateinit var mLayoutManager: CardStackLayoutManager
     private var mView: View? = null
+    private lateinit var mDatabase : ShadiDatabase
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mDatabase =  Room.databaseBuilder(requireContext(), ShadiDatabase::class.java, DB_NAME).allowMainThreadQueries().build()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (mView == null) {
@@ -62,17 +70,15 @@ class ProfileFragment : BaseFragment(), CardStackListener {
 
 
     private fun onFailure(throwable: Throwable) {
-        Toast.makeText(requireContext(),"throwable",Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(),"throwable"+ throwable.message,Toast.LENGTH_LONG).show()
     }
 
     private fun onSuccess(profileListResponse: ProfileListResponse) {
+        mDatabase.getShadiData().insertAllProfile(profileListResponse.results)
         initialize(profileListResponse.results)
         Toast.makeText(requireContext(),"Success",Toast.LENGTH_LONG).show()
     }
 
-    private fun setData() {
-
-    }
 
     private fun initialize(results: List<ProfileShadi?>?) {
         mLayoutManager.setStackFrom(StackFrom.None)
@@ -88,7 +94,7 @@ class ProfileFragment : BaseFragment(), CardStackListener {
         mLayoutManager.setOverlayInterpolator(LinearInterpolator())
 
         card_stack_view.layoutManager = mLayoutManager
-        card_stack_view.adapter = CardStackAdapter(results)
+        card_stack_view.adapter = CardStackAdapter(results,mDatabase)
         card_stack_view.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
                 supportsChangeAnimations = false
@@ -116,7 +122,7 @@ class ProfileFragment : BaseFragment(), CardStackListener {
     }
 
     private fun setupButton() {
-        dislike_button.setOnClickListener {
+        next_button_leftanim.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Left)
                 .setDuration(Duration.Normal.duration)
@@ -136,7 +142,7 @@ class ProfileFragment : BaseFragment(), CardStackListener {
             card_stack_view.rewind()
         }
 
-        like_button.setOnClickListener {
+        next_button_rightanim.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Right)
                 .setDuration(Duration.Normal.duration)
